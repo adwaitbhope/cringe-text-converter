@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String text = ((EditText) findViewById(R.id.text)).getText().toString();
-                String convertedText = convertText(text);
+                String convertedText = TextProcessor.convertText(text);
                 ((EditText) findViewById(R.id.text)).setText("");
 
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -33,37 +33,5 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    public String convertText(String originalText) {
-        char split_conv[] = new char[originalText.length()];
-
-        Boolean isCap = false;
-        for (int i = 0; i < originalText.length(); i++) {
-            char currentChar = Character.toLowerCase(originalText.charAt(i));
-            char replacedChar;
-
-            switch (currentChar) {
-                case 'i':
-                    replacedChar = 'i';
-                    break;
-                case 'l':
-                case 't':
-                    replacedChar = Character.toUpperCase(currentChar);
-                    break;
-                default:
-                    if (isCap) {
-                        replacedChar = Character.toUpperCase(currentChar);
-                        isCap = false;
-                    }
-                    else {
-                        replacedChar = Character.toLowerCase(currentChar);
-                        isCap = true;
-                    }
-            }
-            split_conv[i] = replacedChar;
-        }
-
-        return new String(split_conv);
     }
 }
