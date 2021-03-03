@@ -1,38 +1,27 @@
 package com.cringe.text;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EdgeEffect;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.util.Log;
 
-public class MainActivity extends AppCompatActivity {
+public class IntentReceiverActivity extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        final Button convertTextButton = findViewById(R.id.convert_button);
-        convertTextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = ((EditText) findViewById(R.id.text)).getText().toString();
-                String convertedText = convertText(text);
-                ((EditText) findViewById(R.id.text)).setText("");
+        CharSequence text = getIntent()
+                .getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
 
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("", convertedText);
-                clipboard.setPrimaryClip(clip);
+        String convertedText = convertText(text.toString());
 
-                Toast.makeText(MainActivity.this, "Text copied to clipboard", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+        Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_PROCESS_TEXT, convertedText);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     public String convertText(String originalText) {
@@ -66,4 +55,5 @@ public class MainActivity extends AppCompatActivity {
 
         return new String(split_conv);
     }
+
 }
